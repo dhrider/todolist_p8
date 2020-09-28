@@ -1,0 +1,59 @@
+{
+    "name": "saro0h/to-do-list",
+    "license": "proprietary",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "": "src/",
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.9",
+        "doctrine/orm": "^2.5",
+        "doctrine/doctrine-bundle": "^2.1",
+        "symfony/monolog-bundle": "^3.5",
+        "symfony/polyfill-apcu": "^1.0",
+        "sensio/framework-extra-bundle": "^5.6",
+        "incenteev/composer-parameter-handler": "^2.0",
+        "symfony/framework-bundle": "5.1",
+        "symfony/security-bundle": "5.1",
+        "symfony/twig-bundle": "5.1",
+        "symfony/form": "5.1",
+        "symfony/asset": "^5.1",
+        "symfony/validator": "^5.1",
+        "symfony/flex": "^1.9",
+        "symfony/dotenv": "5.1"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.1",
+        "symfony/debug-bundle": "5.1",
+        "symfony/web-profiler-bundle": "5.1"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": true,
+            "require": "5.1.*"
+        }
+    }
+}
