@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -24,20 +25,22 @@ class UserController extends AbstractController
     /**
      * @Route("/users/create", name="user_create")
      * @param Request $request
-     * @param PasswordEncoderInterface $encoder
+     * @param EncoderFactoryInterface $encoderFactory
      * @return RedirectResponse|Response|null
      */
-    public function createAction(Request $request, PasswordEncoderInterface $encoder)
+    public function createAction(Request $request, EncoderFactoryInterface $encoderFactory)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $password = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
+            $hash = $encoderFactory
+                ->getEncoder($user)
+                ->encodePassword($form->getData()->getPassword(), $user->getSalt());
+            $user->setPassword($hash);
 
             $em->persist($user);
             $em->flush();
@@ -54,18 +57,20 @@ class UserController extends AbstractController
      * @Route("/users/{id}/edit", name="user_edit")
      * @param User $user
      * @param Request $request
-     * @param PasswordEncoderInterface $encoder
+     * @param EncoderFactoryInterface $encoderFactory
      * @return RedirectResponse|Response|null
      */
-    public function editAction(User $user, Request $request, PasswordEncoderInterface $encoder)
+    public function editAction(User $user, Request $request, EncoderFactoryInterface $encoderFactory)
     {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $password = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $hash = $encoderFactory
+                ->getEncoder($user)
+                ->encodePassword($form->getData()->getPassword(), $user->getSalt());
+            $user->setPassword($hash);
 
             $this->getDoctrine()->getManager()->flush();
 
