@@ -77,6 +77,12 @@ class UserController extends AbstractController
                 ->encodePassword($form->getData()->getPassword(), $user->getSalt());
             $user->setPassword($hash);
 
+            if ($form->getData()->getRoles()[0] === 'USER') {
+                $user->setRoles(['ROLE_USER']);
+            } else {
+                $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
