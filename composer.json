@@ -28,7 +28,8 @@
         "symfony/asset": "^5.1",
         "symfony/validator": "^5.1",
         "symfony/flex": "^1.9",
-        "symfony/dotenv": "5.1"
+        "symfony/dotenv": "5.1",
+        "symfony/maker-bundle": "^1.21"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^5.1",
