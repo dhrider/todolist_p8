@@ -110,7 +110,8 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task)
     {
-        if ($this->security->getUser()->getUsername() === $task->getUser()->getUsername()) {
+        if ($this->security->getUser() === $task->getUser() ||
+            (count($this->security->getUser()->getRoles()) === 2 && null === $task->getUser())) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($task);
             $em->flush();
